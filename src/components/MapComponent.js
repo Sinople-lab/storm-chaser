@@ -10,83 +10,21 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Style, Icon } from 'ol/style';
 // -------------------------------------
-import { useState, useEffect, useRef } from 'react';
-// 
-// locations test
-// const coordinates = [
-//   [-74.3093456, 40.6975399],
-//   [-99.1332, 19.4326],
-//   [139.4112196, 35.6677944]
-// ];
-// const events= [
-//   {
-//     "id": "EONET_11729",
-//     "title": "Tropical Storm Kristy",
-//           "description": "",
-//     "link": "https://eonet.gsfc.nasa.gov/api/v2.1/events/EONET_11729",
-//     "categories": [
-//       {
-//         "id": 10,
-//         "title": "Severe Storms"
-//       }
-//     ],
-//     "sources": [
-//       {
-//         "id": "JTWC",
-//         "url": "https://www.metoc.navy.mil/jtwc/products/ep1224.tcw"
-//       },
-//       {
-//         "id": "NOAA_NHC",
-//         "url": "https://www.nhc.noaa.gov/archive/2024/KRISTY.shtml"
-//       }
-    
-//     ],
-//     "geometries": [
-//       {
-//         "date": "2024-10-21T18:00:00Z",
-//         "type": "Point", 
-//         "coordinates": [ -101.4, 13.4 ]
-//       },
-//       {
-//         "date": "2024-10-21T21:00:00Z",
-//         "type": "Point", 
-//         "coordinates": [ -102, 13.5 ]
-//       },
-//       {
-//         "date": "2024-10-22T00:00:00Z",
-//         "type": "Point", 
-//         "coordinates": [ -102.7, 13.7 ]
-//       },
-//       {
-//         "date": "2024-10-22T06:00:00Z",
-//         "type": "Point", 
-//         "coordinates": [ -104, 14.1 ]
-//       },
-//       {
-//         "date": "2024-10-22T12:00:00Z",
-//         "type": "Point", 
-//         "coordinates": [ -106, 14.5 ]
-//       },
-//       {
-//         "date": "2024-10-22T18:00:00Z",
-//         "type": "Point", 
-//         "coordinates": [ -107.7, 14.6 ]
-//       }
-    
-//     ]
-//   },
-// ]
+import { useState, useEffect, useRef, useMemo } from 'react';
 //
 const MapComponent = () => {
   const [eventData, setEventData]=useState([])
   const [loading, setLoading]=useState(false)
+  
+  const [center, setCenter] = useState(fromLonLat([0, 0]))
+  const [zoom, setZoom] = useState(5)
 
   //const mapRef = useRef<HTMLDivElement|undefined>(null);
   const mapRef = useRef(null);
 
   // create the vector source and layer for markers
-  const vectorSource = new VectorSource()
-  const vectorLayer = new VectorLayer({source: vectorSource});
+  const vectorSource = useMemo(()=> new VectorSource(),[])
+  const vectorLayer = useMemo(()=> new VectorLayer({source: vectorSource}),[vectorSource])
 
   useEffect(() => {
 
@@ -123,7 +61,7 @@ const MapComponent = () => {
         zoom: 5
       }),
       target: mapRef.current,
-    });
+    })
 
     // get the coordinates for each event add an icon,
     // for each pair of  coordinates, into the vector source

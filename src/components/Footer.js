@@ -1,7 +1,7 @@
 import React from 'react';
 import { Phone, Mail, Github } from 'lucide-react';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white p-8 ">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
