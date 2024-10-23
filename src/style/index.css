@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.customBG{
+  background-color: #3f4156 !important;
+}
+.myh1{
+  color: #b2bdbd;
+}
+.myp{
+  color: #b2bdbd;
+}
+.mya{
+  color: #61efff;
+}
+.section{
+  background-color: #51546e;
+}
+.ol-control {
+  display: none;
+}
