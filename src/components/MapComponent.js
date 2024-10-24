@@ -26,6 +26,13 @@ const MapComponent = () => {
   const vectorSource = useMemo(()=> new VectorSource(),[])
   const vectorLayer = useMemo(()=> new VectorLayer({source: vectorSource}),[vectorSource])
 
+  // set initial map objects
+  const view = new View({
+    center: center,
+    zoom: zoom
+  });
+  
+
   useEffect(() => {
 
     // ---------------------------------------
@@ -56,17 +63,13 @@ const MapComponent = () => {
           source: new OSM()
         })
       ],
-      view: new View({
-        center: fromLonLat([-74.3093456, 40.6975399]),
-        zoom: 5
-      }),
+      view: view,
       target: mapRef.current,
     })
 
     // get the coordinates for each event add an icon,
     // for each pair of  coordinates, into the vector source
     eventData.forEach(ev =>{
-    //events.forEach(ev =>{
       // if the id corresponds with the type of event
       // we're looking for
       if(ev.categories[0].id===10){ 
@@ -98,6 +101,11 @@ const MapComponent = () => {
 
       // vectorSource.addFeature(feature);
     });
+
+    map.on("moveend", () => {
+      setCenter(map.getView().getCenter());
+      setZoom(map.getView().getZoom());
+    })
 
     // add the new layer to the map
     map.addLayer(vectorLayer);
