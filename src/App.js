@@ -9,7 +9,7 @@ import './style/index.css'
 // ------------------------------------------
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen main">
       <nav className="customBG p-4">
         {/* <div className="container mx-auto flex justify-between items-center"> */}
         <div className="container flex items-center space-x-2">
@@ -24,7 +24,7 @@ function App() {
 
       <MapComponent />
 
-      <div className="p-16 section">
+      <div className="p-12 section">
         <div className="container mx-auto">
           <h2 className="text-2xl myh1 font-bold mb-4">Powered by NASA's data</h2>
           <p className="text-gray-700 myp">

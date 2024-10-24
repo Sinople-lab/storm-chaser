@@ -3,7 +3,7 @@ import { Phone, Mail, Github } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white p-8 ">
+    <footer className="bg-gray-800 text-white p-8 footr">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center space-x-4 mb-4 md:mb-0">
           <a href="tel:2282128716" className="flex items-center space-x-2">

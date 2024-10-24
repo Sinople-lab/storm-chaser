@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.main{
+  height: 100vh;
+}
 .customBG{
   background-color: #3f4156 !important;
 }
@@ -14,9 +17,17 @@
 .mya{
   color: #61efff;
 }
+.footr{
+  z-index: 5;
+}
 .section{
+  z-index: 4;
   background-color: #51546e;
 }
 .ol-control {
   display: none;
+}
+@media only screen and (max-device-width:800px){
+  .main{height: 120vh;}
+  .section{font-size: 0.7em;}
 }

@@ -13,13 +13,15 @@ import { Style, Icon } from 'ol/style';
 import { useState, useEffect, useRef, useMemo } from 'react';
 //
 const MapComponent = () => {
+
+  // variables to store the data
   const [eventData, setEventData]=useState([])
   const [loading, setLoading]=useState(false)
   
-  const [center, setCenter] = useState(fromLonLat([0, 0]))
-  const [zoom, setZoom] = useState(5)
+  // define initial values for the map view
+  // const [center, setCenter] = useState(fromLonLat([0, 0]))
+  // const [zoom, setZoom] = useState(5)
 
-  //const mapRef = useRef<HTMLDivElement|undefined>(null);
   const mapRef = useRef(null);
 
   // create the vector source and layer for markers
@@ -27,15 +29,13 @@ const MapComponent = () => {
   const vectorLayer = useMemo(()=> new VectorLayer({source: vectorSource}),[vectorSource])
 
   // set initial map objects
-  const view = useMemo(()=> new View({
-    center: center,
-    zoom: zoom
-  }),[center,zoom])
+  const view = new View({
+    center: [0, 0],
+    zoom: 5
+  })
   
 
   useEffect(() => {
-
-    // ---------------------------------------
     const fetchEvents = async()=> {
       setLoading(true)
       try{
@@ -52,21 +52,10 @@ const MapComponent = () => {
       }
     }
     fetchEvents() // fetch the data from the url
-    // --------------------------------------------------------
-    if (!mapRef.current) return;
+    
+  }, [eventData])
 
-    // initialize the map and center it at [lat, long]
-    const map = new Map({
-      layers: [
-        new TileLayer({
-          preload: Infinity,
-          source: new OSM()
-        })
-      ],
-      view: view,
-      target: mapRef.current,
-    })
-    // ---------------------------------------------------------
+  const updateLayer=useMemo(()=>{
 
     // get the coordinates for each event add an icon,
     // for each pair of  coordinates, into the vector source
@@ -74,13 +63,13 @@ const MapComponent = () => {
       // if the id corresponds with the type of event
       // we're looking for
       if(ev.categories[0].id===10){ 
-          
+            
         // create a new feature on the event coordinates
         const feature = new Feature({
           geometry: new Point(fromLonLat(ev.geometries[0].coordinates))
-            
+              
         });
-          
+            
         // add an icon to the feature
         feature.setStyle(
           new Style({
@@ -95,25 +84,30 @@ const MapComponent = () => {
           })
         )
         console.log(ev.geometries[0].coordinates)
-        
+          
         // add the new marker to the source list
         vectorSource.addFeature(feature);
       }
-    });
+    },[])
+  
+  },[eventData])
 
-    // update the center of the map by getting the center of the view
-    map.on("moveend", () => {
-      setCenter(map.getView().getCenter());
-      setZoom(map.getView().getZoom());
-    })
+  // initialize the map and center it at [lat, long]
+  const map = new Map({
+    layers: [
+      new TileLayer({
+        preload: Infinity,
+        source: new OSM()
+      })
+    ],
+    view: view,
+    target: mapRef.current,
+  })
+    
+  //map.setTarget(null)
 
-    // add the new layer to the map
-    map.addLayer(vectorLayer);
-
-    return () => {
-      map.setTarget(null);
-    };
-  }, [eventData,vectorLayer,vectorSource,view]);
+  // add the new layer to the map
+  map.addLayer(vectorLayer)
 
   return (
     <div ref={mapRef} className="flex-grow" style={{ height: 'calc(100vh - 200px)' }}></div>
