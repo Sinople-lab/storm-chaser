@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/storm-chaser/static/css/main.3bc34f7f.css",
-    "main.js": "/storm-chaser/static/js/main.a9096569.js",
+    "main.css": "/storm-chaser/static/css/main.e8ec8696.css",
+    "main.js": "/storm-chaser/static/js/main.221bc231.js",
     "static/js/453.e4cd7cbf.chunk.js": "/storm-chaser/static/js/453.e4cd7cbf.chunk.js",
     "index.html": "/storm-chaser/index.html",
-    "main.3bc34f7f.css.map": "/storm-chaser/static/css/main.3bc34f7f.css.map",
-    "main.a9096569.js.map": "/storm-chaser/static/js/main.a9096569.js.map",
+    "main.e8ec8696.css.map": "/storm-chaser/static/css/main.e8ec8696.css.map",
+    "main.221bc231.js.map": "/storm-chaser/static/js/main.221bc231.js.map",
     "453.e4cd7cbf.chunk.js.map": "/storm-chaser/static/js/453.e4cd7cbf.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3bc34f7f.css",
-    "static/js/main.a9096569.js"
+    "static/css/main.e8ec8696.css",
+    "static/js/main.221bc231.js"
   ]
 }
