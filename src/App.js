@@ -1,32 +1,23 @@
 // Martin Carballo Flores october 25/2024
 // ------------------------------------------
-import { MapPin, Menu, CloudLightning } from 'lucide-react';
+import { MapPin} from 'lucide-react';
 //
 import Footer from './components/Footer';
+import Navbar from './components/Navbar';
 import MapComponent from './components/MapComponent';
 // ------------------------------------------
-import './style/index.css'
+import './style/index.css';
 // ------------------------------------------
 function App() {
+
   return (
     <div className="flex flex-col min-h-screen main">
-      <nav className="customBG p-4">
-        {/* <div className="container mx-auto flex justify-between items-center"> */}
-        <div className="container flex items-center space-x-2">
-          <h1 className="myh1"><CloudLightning size={24} /></h1>
-          <h1 className="myh1 text-2xl font-bold">Ashur's storm chaser</h1>
-          <p className='myp smallHide'>Give me a few seconds while I collect the data from the Observartory.</p>
-          <button className="text-white absolute right-10">
-            <Menu size={24} />
-          </button>
-        </div>
-      </nav>
-
+      <Navbar />
       <MapComponent />
 
       <div className="p-12 section">
         <div className="container mx-auto">
-          <h2 className="text-2xl myh1 font-bold mb-4">Powered by NASA's data</h2>
+          <h2 className="text-2xl myh1 font-bold mb-4">Powered by NASA</h2>
           <p className="text-gray-700 myp">
             This map displays the location of severe storms and tornadoes
             all around the world. Just give me a few seconts while I gather natural disaster's data from
@@ -40,7 +31,7 @@ function App() {
         </div>
       </div>
       
-      <Footer />
+      <Footer id='footer'/>
     </div>
   );
 }

@@ -27,6 +27,29 @@
 .ol-control {
   display: none;
 }
+/* ---- dropdown ---- */
+.dropdown-content{
+  transform: translateX(-80%);
+  z-index: 4;
+  position: absolute;
+  display: none;
+  background-color: #51546e;
+  min-width: 150px;
+}
+.menuButton{
+  background-color: #51546e;
+  display: block;
+  padding: 4px;
+  color: #b2bdbd;
+  text-decoration: none;
+}
+.menuButton:hover{
+  background-color: #3f4156;
+}
+.dropdown:hover .dropdown-content{
+  display: block;
+}
+
 @media only screen and (max-device-width:800px){
   .main{height: 120vh;}
   .section{font-size: 0.7em;}
