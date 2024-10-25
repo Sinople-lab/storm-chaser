@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .main{
-  height: 100vh;
+  height: 130vh;
 }
 .customBG{
   background-color: #3f4156 !important;
@@ -30,4 +30,5 @@
 @media only screen and (max-device-width:800px){
   .main{height: 120vh;}
   .section{font-size: 0.7em;}
+  .smallHide{display: none;}
 }

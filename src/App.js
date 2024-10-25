@@ -15,7 +15,7 @@ function App() {
         <div className="container flex items-center space-x-2">
           <h1 className="myh1"><CloudLightning size={24} /></h1>
           <h1 className="myh1 text-2xl font-bold">Ashur's storm chaser</h1>
-
+          <p className='myp smallHide'>Give me a few seconds while I collect the data from the Observartory.</p>
           <button className="text-white absolute right-10">
             <Menu size={24} />
           </button>
@@ -29,7 +29,8 @@ function App() {
           <h2 className="text-2xl myh1 font-bold mb-4">Powered by NASA's data</h2>
           <p className="text-gray-700 myp">
             This map displays the location of hurricanes, storms and tornadoes
-            all around the world. The data is taken from Nasa's Earth Observartory 
+            all around the world. Just give me a few seconts while I gather natural disaster's data from
+            NASA's Observatory. The data is taken from Nasa's Earth Observartory 
             Natural Event Tracker (OENET), which has been supported by <a className='mya' href="https://earthobservatory.nasa.gov/">NASA’s Earth Observatory</a> and <a className='mya' href='https://www.earthdata.nasa.gov/esdis'>Earth Science Data and Information System (ESDIS) Project</a>.
           </p>
           <div className="mt-4 flex items-center">
