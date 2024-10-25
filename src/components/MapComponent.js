@@ -55,21 +55,33 @@ const MapComponent = () => {
     
   }, [eventData])
 
-  const updateLayer=useMemo(()=>{
+  useEffect(()=>{
 
+    if (!mapRef.current) return;
+
+    // initialize the map and center it at [lat, long]
+    const map = new Map({
+      layers: [
+        new TileLayer({
+          preload: Infinity,
+          source: new OSM()
+        })
+      ],
+      view: view,
+      target: mapRef.current,
+    })
     // get the coordinates for each event add an icon,
     // for each pair of  coordinates, into the vector source
     eventData.forEach(ev =>{
       // if the id corresponds with the type of event
       // we're looking for
       if(ev.categories[0].id===10){ 
-            
+              
         // create a new feature on the event coordinates
         const feature = new Feature({
           geometry: new Point(fromLonLat(ev.geometries[0].coordinates))
-              
         });
-            
+              
         // add an icon to the feature
         feature.setStyle(
           new Style({
@@ -84,30 +96,21 @@ const MapComponent = () => {
           })
         )
         console.log(ev.geometries[0].coordinates)
-          
+            
         // add the new marker to the source list
         vectorSource.addFeature(feature);
       }
-    },[])
-  
+    })
+
+    // add the new layer to the map
+    map.addLayer(vectorLayer)
+
+    return(()=>{
+      map.setTarget(null)
+    }
+
+    )
   },[eventData])
-
-  // initialize the map and center it at [lat, long]
-  const map = new Map({
-    layers: [
-      new TileLayer({
-        preload: Infinity,
-        source: new OSM()
-      })
-    ],
-    view: view,
-    target: mapRef.current,
-  })
-    
-  //map.setTarget(null)
-
-  // add the new layer to the map
-  map.addLayer(vectorLayer)
 
   return (
     <div ref={mapRef} className="flex-grow" style={{ height: 'calc(100vh - 200px)' }}></div>
