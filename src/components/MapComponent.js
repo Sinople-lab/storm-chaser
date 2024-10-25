@@ -1,3 +1,5 @@
+// Martin Carballo Flores october 25/2024
+// ------------------------------------------
 // OpenLayers
 import Map from 'ol/Map';
 import View from 'ol/View';
