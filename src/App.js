@@ -28,7 +28,7 @@ function App() {
         <div className="container mx-auto">
           <h2 className="text-2xl myh1 font-bold mb-4">Powered by NASA's data</h2>
           <p className="text-gray-700 myp">
-            This map displays the location of hurricanes, storms and tornadoes
+            This map displays the location of severe storms and tornadoes
             all around the world. Just give me a few seconts while I gather natural disaster's data from
             NASA's Observatory. The data is taken from Nasa's Earth Observartory 
             Natural Event Tracker (OENET), which has been supported by <a className='mya' href="https://earthobservatory.nasa.gov/">NASA’s Earth Observatory</a> and <a className='mya' href='https://www.earthdata.nasa.gov/esdis'>Earth Science Data and Information System (ESDIS) Project</a>.
