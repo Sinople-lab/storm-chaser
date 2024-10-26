@@ -14,57 +14,62 @@ import { Style, Icon } from 'ol/style';
 // -------------------------------------
 import { useState, useEffect, useRef, useMemo } from 'react';
 //
+const DEFAULT_ZOOM = 2
+const DEFAULT_CENTER = [0, 0]
+//
 const MapComponent = () => {
 
   // variables to store the data
-  const [eventData, setEventData]=useState([])
-  const [loading, setLoading]=useState(false)
-  const [tempData,setTemp]=useState([])
+  const [eventData, setEventData]=useState([])                // array to store validated data
+  const [tempData,setTemp]=useState([])                       // array to store fetched data
 
   // define initial values for the map view
-  const [center, setCenter] = useState(fromLonLat([0, 0]))
-  const [zoom, setZoom] = useState(5)
+  // const [center, setCenter] = useState([0, 0])                // store inicial center
+  // const [zoom, setZoom] = useState(5)                         // store initial zoom
 
-
-
-  const mapRef = useRef(null);
+  const mapRef = useRef(null)                                // Variable to reference a div
+  //const [initialized, setInitialized]=useState(false)         // flag to know if the map was initialized already
 
   // create the vector source and layer for markers
-  const vectorSource = useMemo(()=> new VectorSource(),[])
-  const vectorLayer = useMemo(()=> new VectorLayer({source: vectorSource}),[vectorSource])  
+  const vectorSource = useMemo(()=> new VectorSource(),[])    // vector source
+  const vectorLayer = useMemo(()=> new VectorLayer({source: vectorSource}),[vectorSource])  // layer
+
+  const [map, setMap] = useState(new Map())                     // initialize map
 
   useEffect(() => {
     const fetchEvents = async()=> {
-      setLoading(true)
       try{
-        const res = await fetch('https://eonet.gsfc.nasa.gov/api/v2.1/events?api_key=5pt8Rzp61RlOYTUY5ViRaqLde3sNedNSV6DgBNEh');
-        //const res = await fetch('https://eonet.gsfc.nasa.gov/api/v3/events?api_key=5pt8Rzp61RlOYTUY5ViRaqLde3sNedNSV6DgBNEh');
+        // fetch data
+        const res = await fetch('https://eonet.gsfc.nasa.gov/api/v2.1/events?api_key=5pt8Rzp61RlOYTUY5ViRaqLde3sNedNSV6DgBNEh')
         
-        const {events} = await res.json()
-        setTemp(events)
-        if(tempData !== eventData){
-          setEventData(events)
-        }
-        setLoading(false)
-        console.log(eventData)
-
+        const {events} = await res.json()         // destructure events from json response
+        setTemp(events)                           // save events data
       }catch(error){
-        console.log('error fetching data:',error)
+        console.log('error fetching data:',error) // message in case of an fetching error
       }
     }
-    fetchEvents() // fetch the data from the url
-    
-  }, [eventData])
+    fetchEvents()                                 // trigger the fetch function
+  }, [])                                  // set: re render when eventData changes
 
   useEffect(()=>{
+    if((tempData !== eventData)){                 // if data received is different from validated data
+      setEventData(tempData)                      // save validated data as data for the atmospheric events
+      console.log(eventData)
+    }
 
-    // prevents the map to re-render if the map's div already rendered
-    if (!mapRef.current) return
-
+    if (!mapRef.current) return                    // prevents the map to re-render if the map's div already rendered
     //if(tempData !== eventData)return
+    
+    // Get stored values
+    const storedZoom = localStorage.getItem('mapZoom')
+    const storedCenter = localStorage.getItem('mapCenter')
+    
+    // use stored or default values
+    const initialZoom = storedZoom ? parseFloat(storedZoom) : DEFAULT_ZOOM
+    const initialCenter = storedCenter ? JSON.parse(storedCenter) : DEFAULT_CENTER
 
-    // initialize the map and center it at [lat, long]
-    const map = new Map({
+    // initialize the map instance and center it at [lat, long]
+    const mapInstance = new Map({
       layers: [
         new TileLayer({
           preload: Infinity,
@@ -72,23 +77,29 @@ const MapComponent = () => {
         })
       ],
       view: new View({
-        center: center,
-        zoom: zoom
+        center: fromLonLat(initialCenter),
+        zoom: initialZoom
       }),
       target: mapRef.current,
     })
+    setMap(mapInstance)                             // initialize the map
 
-    // get the coordinates for each event add an icon,
+    // Store view changes
+    mapInstance.getView().on('change', () => {
+      const view = mapInstance.getView();
+      localStorage.setItem('mapZoom', view.getZoom()?.toString() || '')
+      localStorage.setItem('mapCenter', JSON.stringify(view.getCenter()))
+    })
+
+    // get the coordinates for each event and add an icon
     // for each pair of  coordinates, into the vector source
     eventData.forEach(ev =>{
-      // if the id corresponds with the type of event
-      // we're looking for
-      if(ev.categories[0].id===10){ 
+      if(ev.categories[0].id===10){                 // if the id corresponds with "severe storms"
               
         // create a new feature on the event coordinates
         const feature = new Feature({
           geometry: new Point(fromLonLat(ev.geometries[0].coordinates))
-        });
+        })
               
         // add an icon to the feature
         feature.setStyle(
@@ -102,24 +113,18 @@ const MapComponent = () => {
               color: '#3B82F6'
             })
           })
-        )
-        console.log(ev.geometries[0].coordinates)
-            
-        // add the new marker to the source list
-        vectorSource.addFeature(feature);
+        )            
+        vectorSource.addFeature(feature)            // add the new marker to the vector source
       }
     })
-
-    // add the new layer to the map
-    map.addLayer(vectorLayer)
-
+    mapInstance.addLayer(vectorLayer)               // add the new layer to the map
     return(()=>{
-      map.setTarget(null)
-    }
+      //map.setTarget(null)
+      mapInstance.setTarget(null)
+    })
+  },[tempData,vectorLayer])                        // set: render when eventData changes
 
-    )
-  },[eventData])
-
+  // return what will be rendered when required
   return (
     <div ref={mapRef} className="flex-grow" style={{ height: 'calc(100vh - 200px)' }}></div>
   )

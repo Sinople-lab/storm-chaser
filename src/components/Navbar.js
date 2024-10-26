@@ -29,7 +29,6 @@ const Navbar = () => {
         <div className="container flex items-center space-x-2">
           <h1 className="myh1"><CloudLightning size={24} /></h1>
           <h1 className="myh1 text-2xl font-bold">Ashur's storm chaser</h1>
-          <p className='myp smallHide'>Give me a few seconds while I collect the data from the Observartory.</p>
           <button className="text-white absolute right-10 dropdown">
             <Menu size={24} />
             <div className='dropdown-content'>
