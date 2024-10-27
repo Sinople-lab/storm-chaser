@@ -1,6 +1,5 @@
 // Martin Carballo Flores october 25/2024
 // ------------------------------------------
-//
 import { MapPin} from 'lucide-react';
 //
 const Section = () => {

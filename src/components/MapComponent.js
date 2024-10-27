@@ -23,18 +23,12 @@ const MapComponent = () => {
   const [eventData, setEventData]=useState([])                // array to store validated data
   const [tempData,setTemp]=useState([])                       // array to store fetched data
 
-  // define initial values for the map view
-  // const [center, setCenter] = useState([0, 0])                // store inicial center
-  // const [zoom, setZoom] = useState(5)                         // store initial zoom
-
-  const mapRef = useRef(null)                                // Variable to reference a div
-  //const [initialized, setInitialized]=useState(false)         // flag to know if the map was initialized already
+  const mapRef = useRef(null)                                 // Variable to reference a div
+  //const [initialized, setInitialized]=useState(false)       // flag to know if the map was initialized already
 
   // create the vector source and layer for markers
   const vectorSource = useMemo(()=> new VectorSource(),[])    // vector source
   const vectorLayer = useMemo(()=> new VectorLayer({source: vectorSource}),[vectorSource])  // layer
-
-  //const [map, setMap] = useState(new Map())                     // initialize map
 
   useEffect(() => {
     const fetchEvents = async()=> {
@@ -49,18 +43,18 @@ const MapComponent = () => {
       }
     }
     fetchEvents()                                 // trigger the fetch function
-  }, [tempData])                                  // set: re render when eventData changes
+  }, [])                                          // when empty it sets: run this effect every re-render of this component
 
   useEffect(()=>{
-    if(tempData !== eventData){                 // if data received is different from stored data
+    if(tempData !== eventData){                   // if data received is different from stored data
       setEventData(tempData)                      // save validated data as data for the atmospheric events
       console.log(eventData)
     }
 
-    if (!mapRef.current) return                    // prevents the map to re-render if the map's div already rendered
+    if (!mapRef.current) return                   // prevents the map to re-render if the map's div already rendered
     //if(tempData !== eventData)return
     
-    // Get stored values
+    // Get previous stored values
     const storedZoom = localStorage.getItem('mapZoom')
     const storedCenter = localStorage.getItem('mapCenter')
     
@@ -68,7 +62,7 @@ const MapComponent = () => {
     const initialZoom = storedZoom ? parseFloat(storedZoom) : 5
     const initialCenter = storedCenter ? JSON.parse(storedCenter) : [0,0]
 
-    // initialize the map instance and center it at [lat, long]
+    // initialize the map and center it at [lat, long]
     const map = new Map({
       layers: [
         new TileLayer({
@@ -81,13 +75,6 @@ const MapComponent = () => {
         zoom: initialZoom
       }),
       target: mapRef.current,
-    })
-
-    // Store view changes
-    map.getView().on('change', () => {
-      const view = map.getView();
-      localStorage.setItem('mapZoom', view.getZoom()?.toString() || '')
-      localStorage.setItem('mapCenter', JSON.stringify(view.getCenter()))
     })
 
     // get the coordinates for each event and add an icon
@@ -113,16 +100,23 @@ const MapComponent = () => {
             })
           })
         )
-        vectorSource.addFeature(feature)            // add the new marker to the vector source
+        vectorSource.addFeature(feature)           // add the new marker to the vector source
       }
     })
-    map.addLayer(vectorLayer)               // add the new layer to the map
-    
-    //setMap(mapInstance)                             // initialize the map
+    map.addLayer(vectorLayer)                      // add the new layer to the map
+
+    // Store view changes
+    map.getView().on('change', () => {
+      const view = map.getView();
+      localStorage.setItem('mapZoom', view.getZoom()?.toString() || '')
+      localStorage.setItem('mapCenter', JSON.stringify(view.getCenter()))
+    })
+
+    // clean up function
     return(()=>{
       map.setTarget(undefined)
     })
-  },[vectorLayer,tempData])                        // set: render when eventData changes
+  },[tempData])                                     // set: render when eventData changes
 
   // return what will be rendered when required
   return (
