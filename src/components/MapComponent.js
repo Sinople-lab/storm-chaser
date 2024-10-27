@@ -34,7 +34,7 @@ const MapComponent = () => {
   const vectorSource = useMemo(()=> new VectorSource(),[])    // vector source
   const vectorLayer = useMemo(()=> new VectorLayer({source: vectorSource}),[vectorSource])  // layer
 
-  const [map, setMap] = useState(new Map())                     // initialize map
+  //const [map, setMap] = useState(new Map())                     // initialize map
 
   useEffect(() => {
     const fetchEvents = async()=> {
@@ -49,10 +49,10 @@ const MapComponent = () => {
       }
     }
     fetchEvents()                                 // trigger the fetch function
-  }, [])                                  // set: re render when eventData changes
+  }, [tempData])                                  // set: re render when eventData changes
 
   useEffect(()=>{
-    if((tempData !== eventData)){                 // if data received is different from validated data
+    if(tempData !== eventData){                 // if data received is different from stored data
       setEventData(tempData)                      // save validated data as data for the atmospheric events
       console.log(eventData)
     }
@@ -65,11 +65,11 @@ const MapComponent = () => {
     const storedCenter = localStorage.getItem('mapCenter')
     
     // use stored or default values
-    const initialZoom = storedZoom ? parseFloat(storedZoom) : DEFAULT_ZOOM
-    const initialCenter = storedCenter ? JSON.parse(storedCenter) : DEFAULT_CENTER
+    const initialZoom = storedZoom ? parseFloat(storedZoom) : 5
+    const initialCenter = storedCenter ? JSON.parse(storedCenter) : [0,0]
 
     // initialize the map instance and center it at [lat, long]
-    const mapInstance = new Map({
+    const map = new Map({
       layers: [
         new TileLayer({
           preload: Infinity,
@@ -77,16 +77,15 @@ const MapComponent = () => {
         })
       ],
       view: new View({
-        center: fromLonLat(initialCenter),
+        center: initialCenter,
         zoom: initialZoom
       }),
       target: mapRef.current,
     })
-    setMap(mapInstance)                             // initialize the map
 
     // Store view changes
-    mapInstance.getView().on('change', () => {
-      const view = mapInstance.getView();
+    map.getView().on('change', () => {
+      const view = map.getView();
       localStorage.setItem('mapZoom', view.getZoom()?.toString() || '')
       localStorage.setItem('mapCenter', JSON.stringify(view.getCenter()))
     })
@@ -113,16 +112,17 @@ const MapComponent = () => {
               color: '#3B82F6'
             })
           })
-        )            
+        )
         vectorSource.addFeature(feature)            // add the new marker to the vector source
       }
     })
-    mapInstance.addLayer(vectorLayer)               // add the new layer to the map
+    map.addLayer(vectorLayer)               // add the new layer to the map
+    
+    //setMap(mapInstance)                             // initialize the map
     return(()=>{
-      //map.setTarget(null)
-      mapInstance.setTarget(null)
+      map.setTarget(undefined)
     })
-  },[tempData,vectorLayer])                        // set: render when eventData changes
+  },[vectorLayer,tempData])                        // set: render when eventData changes
 
   // return what will be rendered when required
   return (
