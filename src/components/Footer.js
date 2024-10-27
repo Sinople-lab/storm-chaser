@@ -1,8 +1,9 @@
-// Martin Carballo Flores october 25/2024
+// Martin Carballo Flores
+// october 25/2024
 // ------------------------------------------
 import React from 'react';
 import { Phone, Mail, Github } from 'lucide-react';
-
+// ------------------------------------------
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white p-8 footr">

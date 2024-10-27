@@ -1,7 +1,8 @@
-// Martin Carballo Flores october 25/2024
+// Martin Carballo Flores
+// october 25/2024
 // ------------------------------------------
 import { MapPin} from 'lucide-react';
-//
+// ------------------------------------------
 const Section = () => {
   return (
     <div className="p-12 section">

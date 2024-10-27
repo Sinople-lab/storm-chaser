@@ -1,4 +1,5 @@
-// Martin Carballo Flores october 25/2024
+// Martin Carballo Flores
+// october 25/2024
 // ------------------------------------------
 // OpenLayers
 import Map from 'ol/Map';
@@ -11,9 +12,9 @@ import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Style, Icon } from 'ol/style';
-// -------------------------------------
+// -----------------------------------------
 import { useState, useEffect, useRef, useMemo } from 'react';
-//
+// -----------------------------------------
 const DEFAULT_ZOOM = 2
 const DEFAULT_CENTER = [0, 0]
 //
@@ -74,7 +75,7 @@ const MapComponent = () => {
         center: initialCenter,
         zoom: initialZoom
       }),
-      target: mapRef.current,
+      target: mapRef.current,                       // set target to "this div"
     })
 
     // get the coordinates for each event and add an icon
@@ -114,7 +115,7 @@ const MapComponent = () => {
 
     // clean up function
     return(()=>{
-      map.setTarget(undefined)
+      map.setTarget(undefined)                      // set map target to undefined or null as well
     })
   },[tempData])                                     // set: render when eventData changes
 
