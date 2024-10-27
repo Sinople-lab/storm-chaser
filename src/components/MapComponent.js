@@ -21,11 +21,9 @@ const DEFAULT_CENTER = [0, 0]
 const MapComponent = () => {
 
   // variables to store the data
-  const [eventData, setEventData]=useState([])                // array to store validated data
-  const [tempData,setTemp]=useState([])                       // array to store fetched data
-
-  const mapRef = useRef(null)                                 // Variable to reference a div
-  //const [initialized, setInitialized]=useState(false)       // flag to know if the map was initialized already
+  const [eventData, setEventData]=useState([])    // array to store validated data
+  const [tempData,setTemp]=useState([])           // array to store fetched data
+  const mapRef = useRef(null)                     // will be used as div id, as long as this component is mounted
 
   // create the vector source and layer for markers
   const vectorSource = useMemo(()=> new VectorSource(),[])    // vector source
@@ -49,11 +47,8 @@ const MapComponent = () => {
   useEffect(()=>{
     if(tempData !== eventData){                   // if data received is different from stored data
       setEventData(tempData)                      // save validated data as data for the atmospheric events
-      console.log(eventData)
     }
-
     if (!mapRef.current) return                   // prevents the map to re-render if the map's div already rendered
-    //if(tempData !== eventData)return
     
     // Get previous stored values
     const storedZoom = localStorage.getItem('mapZoom')
@@ -63,7 +58,7 @@ const MapComponent = () => {
     const initialZoom = storedZoom ? parseFloat(storedZoom) : 5
     const initialCenter = storedCenter ? JSON.parse(storedCenter) : [0,0]
 
-    // initialize the map and center it at [lat, long]
+    // initialize the map
     const map = new Map({
       layers: [
         new TileLayer({
@@ -75,13 +70,13 @@ const MapComponent = () => {
         center: initialCenter,
         zoom: initialZoom
       }),
-      target: mapRef.current,                       // set target to "this div"
+      target: mapRef.current,                     // set target to this div
     })
 
     // get the coordinates for each event and add an icon
     // for each pair of  coordinates, into the vector source
     eventData.forEach(ev =>{
-      if(ev.categories[0].id===10){                 // if the id corresponds with "severe storms"
+      if(ev.categories[0].id===10){               // if the id corresponds with "severe storms"
               
         // create a new feature on the event coordinates
         const feature = new Feature({
@@ -101,10 +96,10 @@ const MapComponent = () => {
             })
           })
         )
-        vectorSource.addFeature(feature)           // add the new marker to the vector source
+        vectorSource.addFeature(feature)         // add the new marker to the vector source
       }
     })
-    map.addLayer(vectorLayer)                      // add the new layer to the map
+    map.addLayer(vectorLayer)                    // add the new layer to the map
 
     // Store view changes
     map.getView().on('change', () => {
@@ -112,17 +107,12 @@ const MapComponent = () => {
       localStorage.setItem('mapZoom', view.getZoom()?.toString() || '')
       localStorage.setItem('mapCenter', JSON.stringify(view.getCenter()))
     })
-
-    // clean up function
     return(()=>{
-      map.setTarget(undefined)                      // set map target to undefined or null as well
+      map.setTarget(undefined)                    // set map target to undefined or null as well
     })
-  },[tempData])                                     // set: render when eventData changes
-
-  // return what will be rendered when required
+  },[tempData])                                   // set: render when eventData changes
   return (
     <div ref={mapRef} className="flex-grow" style={{ height: 'calc(100vh - 200px)' }}></div>
   )
 }
-
 export default MapComponent
