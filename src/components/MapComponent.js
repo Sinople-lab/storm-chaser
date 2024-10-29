@@ -55,8 +55,8 @@ const MapComponent = () => {
     const storedCenter = localStorage.getItem('mapCenter')
     
     // use stored or default values
-    const initialZoom = storedZoom ? parseFloat(storedZoom) : 5
-    const initialCenter = storedCenter ? JSON.parse(storedCenter) : [0,0]
+    const initialZoom = storedZoom ? parseFloat(storedZoom) : DEFAULT_ZOOM
+    const initialCenter = storedCenter ? JSON.parse(storedCenter) : DEFAULT_CENTER
 
     // initialize the map
     const map = new Map({
