@@ -42,9 +42,9 @@ const MapComponent = () => {
       }
     }
     fetchEvents()                                 // trigger the fetch function
-  }, [])                                          // when empty it sets: run this effect every re-render of this component
+  //}, [])                                          // when empty it sets: run this effect every re-render of this component
 
-  useEffect(()=>{
+  //useEffect(()=>{
     if(tempData !== eventData){                   // if data received is different from stored data
       setEventData(tempData)                      // save validated data as data for the atmospheric events
     }
@@ -77,12 +77,14 @@ const MapComponent = () => {
     // for each pair of  coordinates, into the vector source
     eventData.forEach(ev =>{
       if(ev.categories[0].id===10){               // if the id corresponds with "severe storms"
-              
+        
+        console.log(fromLonLat(ev.geometries[0].coordinates))
+
         // create a new feature on the event coordinates
         const feature = new Feature({
           geometry: new Point(fromLonLat(ev.geometries[0].coordinates))
         })
-              
+         
         // add an icon to the feature
         feature.setStyle(
           new Style({
